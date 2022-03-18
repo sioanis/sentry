@@ -19,7 +19,6 @@ import {Client} from 'sentry/api';
 import Access from 'sentry/components/acl/access';
 import Feature from 'sentry/components/acl/feature';
 import FeatureDisabled from 'sentry/components/acl/featureDisabled';
-import ActionButton from 'sentry/components/actions/button';
 import IgnoreActions from 'sentry/components/actions/ignore';
 import ResolveActions from 'sentry/components/actions/resolve';
 import GuideAnchor from 'sentry/components/assistant/guideAnchor';
@@ -27,7 +26,6 @@ import Button from 'sentry/components/button';
 import DropdownMenuControlV2 from 'sentry/components/dropdownMenuControlV2';
 import Tooltip from 'sentry/components/tooltip';
 import {IconEllipsis} from 'sentry/icons';
-import {IconRefresh} from 'sentry/icons/iconRefresh';
 import {t} from 'sentry/locale';
 import space from 'sentry/styles/space';
 import {
@@ -392,22 +390,11 @@ class Actions extends Component<Props, State> {
             onReshare={() => this.onShare(true)}
           />
         )}
-
         <SubscribeAction
           disabled={disabled}
           group={group}
           onClick={this.handleClick(disabled, this.onToggleSubscribe)}
         />
-
-        {displayReprocessEventAction(organization.features, event) && (
-          <ReprocessAction
-            disabled={disabled}
-            icon={<IconRefresh size="xs" />}
-            title={t('Reprocess this issue')}
-            aria-label={t('Reprocess this issue')}
-            onClick={this.handleClick(disabled, this.onReprocessEvent)}
-          />
-        )}
 
         <Access organization={organization} access={['event:admin']}>
           {({hasAccess}) => (
@@ -437,6 +424,15 @@ class Actions extends Component<Props, State> {
                         label: t('Open in Discover'),
                         hidden: !hasFeature,
                         onAction: this.onRedirectDiscover,
+                      },
+                      {
+                        key: 'reprocess',
+                        label: t('Reprocess'),
+                        hidden: !displayReprocessEventAction(
+                          organization.features,
+                          event
+                        ),
+                        onAction: this.onReprocessEvent,
                       },
                       {
                         key: 'delete',
@@ -488,8 +484,6 @@ class Actions extends Component<Props, State> {
     );
   }
 }
-
-const ReprocessAction = styled(ActionButton)``;
 
 const Wrapper = styled('div')`
   display: grid;
