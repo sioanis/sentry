@@ -427,7 +427,7 @@ class Actions extends Component<Props, State> {
                       },
                       {
                         key: 'reprocess',
-                        label: t('Reprocess'),
+                        label: t('Reprocess events'),
                         hidden: !displayReprocessEventAction(
                           organization.features,
                           event
@@ -435,43 +435,35 @@ class Actions extends Component<Props, State> {
                         onAction: this.onReprocessEvent,
                       },
                       {
-                        key: 'delete',
+                        key: 'delete-issue',
                         label: t('Delete'),
                         hidden: !hasAccess,
-                        isSubmenu: true,
-                        children: [
-                          {
-                            key: 'delete-issue',
-                            label: t('Delete issue'),
-                            onAction: () =>
-                              openModal(
-                                ({Body, Footer, closeModal}: ModalRenderProps) => (
-                                  <Fragment>
-                                    <Body>
-                                      {t(
-                                        'Deleting this issue is permanent. Are you sure you wish to continue?'
-                                      )}
-                                    </Body>
-                                    <Footer>
-                                      <Button onClick={closeModal}>{t('Cancel')}</Button>
-                                      <Button
-                                        style={{marginLeft: space(1)}}
-                                        priority="primary"
-                                        onClick={this.onDelete}
-                                      >
-                                        {t('Delete')}
-                                      </Button>
-                                    </Footer>
-                                  </Fragment>
-                                )
-                              ),
-                          },
-                          {
-                            key: 'delete-and-discard',
-                            label: t('Delete and discard future events'),
-                            onAction: () => this.openDiscardModal(),
-                          },
-                        ],
+                        onAction: () =>
+                          openModal(({Body, Footer, closeModal}: ModalRenderProps) => (
+                            <Fragment>
+                              <Body>
+                                {t(
+                                  'Deleting this issue is permanent. Are you sure you wish to continue?'
+                                )}
+                              </Body>
+                              <Footer>
+                                <Button onClick={closeModal}>{t('Cancel')}</Button>
+                                <Button
+                                  style={{marginLeft: space(1)}}
+                                  priority="primary"
+                                  onClick={this.onDelete}
+                                >
+                                  {t('Delete')}
+                                </Button>
+                              </Footer>
+                            </Fragment>
+                          )),
+                      },
+                      {
+                        key: 'delete-and-discard',
+                        label: t('Delete and discard future events'),
+                        hidden: !hasAccess,
+                        onAction: () => this.openDiscardModal(),
                       },
                     ]}
                   />
